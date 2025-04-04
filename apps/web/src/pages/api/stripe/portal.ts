@@ -6,10 +6,10 @@ import { z } from "zod";
 import { absoluteUrl } from "@/utils/absolute-url";
 import { getServerSession } from "@/utils/auth";
 
-const inputSchema = z.object({
-  session_id: z.string().optional(),
-  return_path: z.string().optional(),
-});
+const inputSchema = z.object({  
+  session_id: z.string().optional(),  
+  return_path: z.string().optional(),  
+});  
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,8 +32,8 @@ export default async function handler(
       id: userSession.user.id,
     },
     select: {
-      email: true,
-      customerId: true,
+      email: true,  
+      customerId: true,  
     },
   });
 
@@ -46,17 +46,17 @@ export default async function handler(
 
   let customerId: string;
 
-  if (sessionId) {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    customerId = session.customer as string;
-  } else {
-    customerId = user.customerId as string;
-  }
+  if (sessionId) {  
+    const session = await stripe.checkout.sessions.retrieve(sessionId);  
+    customerId = session.customer as string;   
+  } else {  
+    customerId = user.customerId as string;   
+  }  
 
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: absoluteUrl(return_path),
   });
 
-  res.status(303).redirect(portalSession.url);
+  res.status(303).redirect(portalSession.url);   
 }
